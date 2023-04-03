@@ -75,22 +75,16 @@ class ContextualUpdate(Recommender):
                 continue
 
             not_recommended_tracks.append(track)
-            # recommendation_track = track
-            # break
 
         if len(not_recommended_tracks) == 0:
             # Если нет тех треков, которые еще не рекомендовали. Рекомендуем рандом
             return self.fallback.recommend_next(user, prev_track, prev_track_time)
 
-        # if recommendation_track is None:
-        #     # Если нет тех треков, которые еще не рекомендовали. Рекомендуем рандом
-        #     return self.fallback.recommend_next(user, prev_track, prev_track_time)
-
         recommendation_track = not_recommended_tracks[0]
         not_recommended_tracks.pop(0)
 
         listened.append(recommendation_track)
-        # listened.append(prev_track)
+
         # Обновление истории рекомендаций пользователя
         self.listened_redis.set(
             user, self.catalog.to_bytes(listened)

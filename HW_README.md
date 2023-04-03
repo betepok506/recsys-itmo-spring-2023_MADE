@@ -42,3 +42,6 @@ https://drive.google.com/file/d/1uL0KqAMwRqYJ9edy5RdRiSb9vNfj_JuV/view?usp=shari
 - Визуализировать результаты A/B теста. Для удобства можно воспользоваться блокнотом `jupyter/Week1Seminar.ipynb`. 
 Он ожидает что логи лежат по пути `../tmp/log/data.json` 
 
+# Результат A/B теста
+
+![Результат A/B теста](diagrams/Result.png)
