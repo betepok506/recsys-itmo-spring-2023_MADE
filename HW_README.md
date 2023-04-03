@@ -44,4 +44,4 @@ https://drive.google.com/file/d/1uL0KqAMwRqYJ9edy5RdRiSb9vNfj_JuV/view?usp=shari
 
 # Результат A/B теста
 
-![Результат A/B теста](diagrams/Result.png)
+![Результат A/B теста](diagrams/Result.PNG)
