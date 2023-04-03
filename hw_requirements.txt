@@ -1,0 +1,8 @@
+notebook
+pandas
+scikit-learn
+matplotlib
+seaborn
+tqdm
+pytorch_lightning
+tensorboardX
