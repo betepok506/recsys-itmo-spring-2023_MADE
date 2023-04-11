@@ -45,3 +45,9 @@ https://drive.google.com/file/d/1uL0KqAMwRqYJ9edy5RdRiSb9vNfj_JuV/view?usp=shari
 # Результат A/B теста
 
 ![Результат A/B теста](diagrams/Result.PNG)
+
+
+# Эксперименты
+1. Пытался построить рекомендации с помощью Word2Vec, рекомендации получилось сделать однако точность оказалась посредственной
+обучение в ноутбуке `hw_jupyter/Reccomendation_Word2Vec.ipynb`
+2. Попытался построить рекомендации с помощью ALS точность тоже оказаласт не очень
