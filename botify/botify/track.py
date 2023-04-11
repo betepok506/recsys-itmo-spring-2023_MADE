@@ -22,9 +22,10 @@ class Catalog:
     def __init__(self, app):
         self.app = app
         self.tracks = []
+        self.modified_tracks = []
         self.top_tracks = []
 
-    def load(self, catalog_path, top_tracks_path):
+    def load(self, catalog_path, top_tracks_path, modified_tracks_with_diverse_recs_path):
         self.app.logger.info(f"Loading tracks from {catalog_path}")
         with open(catalog_path) as catalog_file:
             for j, line in enumerate(catalog_file):
@@ -39,6 +40,20 @@ class Catalog:
                 )
         self.app.logger.info(f"Loaded {j+1} tracks")
 
+        self.app.logger.info(f"Loading tracks from {modified_tracks_with_diverse_recs_path}")
+        with open(modified_tracks_with_diverse_recs_path) as catalog_file:
+            for j, line in enumerate(catalog_file):
+                data = json.loads(line)
+                self.modified_tracks.append(
+                    Track(
+                        data["track"],
+                        data["artist"],
+                        data["title"],
+                        data.get("recommendations", []),
+                    )
+                )
+        self.app.logger.info(f"Loaded {j + 1} tracks")
+
         self.app.logger.info(f"Loading top tracks from {top_tracks_path}")
         with open(top_tracks_path) as top_tracks_path_file:
             self.top_tracks = json.load(top_tracks_path_file)
@@ -46,11 +61,17 @@ class Catalog:
 
         return self
 
-    def upload_tracks(self, redis):
+    def upload_tracks(self, redis_tracks, redis_modified_tracks):
         self.app.logger.info(f"Uploading tracks to redis")
         for track in self.tracks:
-            redis.set(track.track, self.to_bytes(track))
-        self.app.logger.info(f"Uploaded {len(self.tracks)} tracks")
+            redis_tracks.set(track.track, self.to_bytes(track))
+
+        for track in self.modified_tracks:
+            redis_modified_tracks.set(track.track, self.to_bytes(track))
+
+        self.app.logger.info(
+            f"Uploaded {len(self.tracks)} tracks, {len(self.modified_tracks)} modified tracks"
+        )
 
     def upload_artists(self, redis):
         self.app.logger.info(f"Uploading artists to redis")

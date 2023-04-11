@@ -24,6 +24,7 @@ app = Flask(__name__)
 app.config.from_file("config.json", load=json.load)
 api = Api(app)
 
+modified_tracks_redis = Redis(app, config_prefix="REDIS_MODIFIED_TRACKS")
 tracks_redis = Redis(app, config_prefix="REDIS_TRACKS")
 artists_redis = Redis(app, config_prefix="REDIS_ARTIST")
 listened_redis = Redis(app, config_prefix="REDIS_LISTENED")
@@ -31,9 +32,10 @@ listened_redis = Redis(app, config_prefix="REDIS_LISTENED")
 data_logger = DataLogger(app)
 
 catalog = Catalog(app).load(
-    app.config["TRACKS_CATALOG"], app.config["TOP_TRACKS_CATALOG"]
+    app.config["TRACKS_CATALOG"], app.config["TOP_TRACKS_CATALOG"], app.config["MODIFIED_TRACKS_CATALOG"]
 )
-catalog.upload_tracks(tracks_redis.connection)
+catalog.upload_tracks(tracks_redis.connection, modified_tracks_redis.connection)
+# catalog.upload_tracks(tracks_redis.connection)
 catalog.upload_artists(artists_redis.connection)
 # catalog.upload_recommendations(recommendations_redis.connection)
 
@@ -68,7 +70,7 @@ class NextTrack(Resource):
         # TODO Seminar 5 step 3: Wire CONTEXTUAL A/B experiment
         treatment = Experiments.CONTEXTUAL_UPDATE.assign(user)
         if treatment == Treatment.T1:
-            recommender = ContextualUpdate(tracks_redis, listened_redis, catalog)
+            recommender = ContextualUpdate(modified_tracks_redis, listened_redis, catalog)
         else:
             recommender = Contextual(tracks_redis, catalog)
             # recommender = Random(tracks_redis.connection)
